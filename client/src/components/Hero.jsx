@@ -1,40 +1,100 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { assets } from '../assets/assets'
+import { motion } from 'framer-motion'
+import App from '../App'
+import { AppContext } from '../context/AppContext'
+import { useNavigate } from 'react-router-dom'
 
 function Hero() {
+
+    const { user, showLogin, setShowLogin } = useContext(AppContext)
+    const navigate = useNavigate()
+    const onclickHandler = () => {
+        if (user) {
+            navigate('/result')
+        }
+        else {
+            setShowLogin(true)
+        }
+    }
     return (
-        <div className=''>
+        <motion.div className=''
+            initial={{ opacity: 0.2, y: 100 }}
+            transition={{ duration: 1 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{  }}
+
+        >
             <div className=' text-center flex flex-col justify-center items-center'>
-                <div className='flex justify-center w-fit items-center mt-16 mb-8 gap-1 bg-white rounded-full border border-black px-6 py-1.5'>
+                <motion.div
+                    className='flex justify-center w-fit items-center mt-16 mb-8 gap-1 bg-white rounded-full border border-black px-6 py-1.5'
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.8 }}
+                >
                     <p className='text-xs sm:text-sm lg:text-lg'>Best text to image generator</p>
                     <img className='w-2 sm:w-5 lg:w-7 max-sm:pt-1' src={assets.star_icon} alt="" />
-                </div>
+                </motion.div>
                 <div>
-                    <h1 className='mb-6 text-3xl sm:text-5xl lg:text-7xl font-bold'>Turn text to <br /> <span className='text-blue-500'>image</span>, in seconds.</h1>
-                    <p>Unleash your creativity with AI. Turn your imagination into visual art in <br /> seconds – just type, and watch the magic happen.</p>
+                    <motion.h1 className='mb-5 text-3xl sm:text-5xl lg:text-7xl font-bold'
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.4, duration: 2 }}
+                    >Turn text to <br /> <span className='text-blue-500'  >image</span>, in seconds.</motion.h1>
+                    <motion.p className=''
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6, duration: 0.8 }}
+                    >Unleash your creativity with AI. Turn your imagination into visual art in <br /> seconds – just type, and watch the magic happen.</motion.p>
                 </div>
-                <div className='px-8 py-2 bg-gray-800 text-white flex items-center gap-1 rounded-full text-base mt-12 mb-20 hover:scale-105 transition-all duration-700 cursor-pointer'>
+                <motion.button onClick={onclickHandler}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ default: { duration: 0.5 }, opacity: { delay: 0.8, duration: 1 } }}
+                    className='px-8 py-2 bg-gray-800 text-white flex items-center gap-1 rounded-full text-base mt-12 mb-20 hover:scale-105 transition-all duration-700 cursor-pointer'>
                     <p>Generate Images </p>
                     <img className='w-4' src={assets.star_group} alt="" />
-                </div>
-                <div>
+                </motion.button>
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1, duration: 1 }}
+                >
                     <div className='flex gap-3 mb-6 '>
-                        <img className='w-8 sm:w-14 lg:w-20 rounded-lg' src={assets.sample_img_1} alt="" />
-                        <img className='w-8 sm:w-14 lg:w-20 rounded-lg' src={assets.sample_img_2} alt="" />
-                        <img className='w-8 sm:w-14 lg:w-20 rounded-lg' src={assets.sample_img_1} alt="" />
-                        <img className='w-8 sm:w-14 lg:w-20 rounded-lg' src={assets.sample_img_2} alt="" />
-                        <img className='w-8 sm:w-14 lg:w-20 rounded-lg' src={assets.sample_img_1} alt="" />
-                        <img className='w-8 sm:w-14 lg:w-20 rounded-lg' src={assets.sample_img_2} alt="" />
+                        <motion.img
+                            whileHover={{ scale: 1.05, duration: 0.1 }}
+                            className='w-8 sm:w-14 lg:w-20 rounded-lg' src={assets.sample_img_1} alt="" />
+                        <motion.img
+                            whileHover={{ scale: 1.05, duration: 0.1 }}
+                            className='w-8 sm:w-14 lg:w-20 rounded-lg' src={assets.sample_img_2} alt="" />
+                        <motion.img
+                            whileHover={{ scale: 1.05, duration: 0.1 }}
+                            className='w-8 sm:w-14 lg:w-20 rounded-lg' src={assets.sample_img_1} alt="" />
+                        <motion.img
+                            whileHover={{ scale: 1.05, duration: 0.1 }}
+                            className='w-8 sm:w-14 lg:w-20 rounded-lg' src={assets.sample_img_2} alt="" />
+                        <motion.img
+                            whileHover={{ scale: 1.05, duration: 0.1 }}
+                            className='w-8 sm:w-14 lg:w-20 rounded-lg' src={assets.sample_img_1} alt="" />
+                        <motion.img
+                            whileHover={{ scale: 1.05, duration: 0.1 }}
+                            className='w-8 sm:w-14 lg:w-20 rounded-lg' src={assets.sample_img_2} alt="" />
                     </div>
-                    <p>Generated images from imagify</p>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1.2, duration: 0.8 }}
+                    >Generated images from imagify</motion.p>
 
-                </div>
+                </motion.div>
 
 
 
 
             </div>
-        </div>
+        </motion.div>
     )
 }
 

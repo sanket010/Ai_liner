@@ -1,17 +1,20 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { assets } from '../assets/assets'
 
 import { NavLink, useNavigate } from 'react-router-dom'
+import { AppContext } from '../context/AppContext'
 
 function Navbar() {
-  const [user, setUser] = useState(true)
+
+  const { user, setUser, showLogin, setShowLogin } = useContext(AppContext)
+
   const navigate = useNavigate()
   return (
     <div className=''>
       <div className='flex justify-between py-6  items-center'>
         <div>
           <NavLink to='/'>
-            <img  className='cursor-pointer h-9' src={assets.logo} alt="" />
+            <img className='cursor-pointer h-9' src={assets.logo} alt="" />
           </NavLink>
         </div>
         <div>
@@ -40,7 +43,7 @@ function Navbar() {
               :
               <div className='flex max-sm:gap-2 gap-8 items-center '>
                 <p onClick={() => navigate('/pricing')} className='max-sm:hidden text-base'>Pricing</p>
-                <button className='bg-gray-800 text-white px-8 py-1.5 rounded-full'>Login</button>
+                <button onClick={() => setShowLogin(true)} className='bg-gray-800 text-white px-8 py-1.5 rounded-full'>Login</button>
               </div>
           }
         </div>

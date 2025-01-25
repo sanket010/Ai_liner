@@ -3,17 +3,8 @@ import { assets } from '../assets/assets'
 
 function Footer() {
     return (
-        <div>
-            <div className='flex flex-col items-center pb-20'>
-                <div className='text-center pt-16 pb-6'>
-                    <h1 className='text-xl text-[#252525] font-medium'>See the magic. Try now</h1>
-
-                </div>
-                <button className='px-8 py-2 bg-gray-800 text-white flex items-center gap-1 rounded-full text-base hover:scale-105 transition-all duration-700 cursor-pointer'>
-                    <p>Generate Images </p>
-                    <img className='w-4' src={assets.star_group} alt="" />
-                </button>
-            </div>
+        <div className=''>
+            
 
             {/* footer section */}
 

@@ -4,7 +4,6 @@ import Hero from '../components/Hero'
 import Steps from '../components/Steps'
 import Advertize from '../components/Advertize'
 import Testinomials from '../components/Testinomials'
-import Footer from '../components/Footer'
 
 function Home() {
   return (
@@ -13,7 +12,6 @@ function Home() {
       <Steps />
       <Advertize />
       <Testinomials />
-      <Footer />
     </div>
   )
 }
