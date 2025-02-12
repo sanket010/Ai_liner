@@ -6,13 +6,13 @@ import { AppContext } from '../context/AppContext'
 
 function Navbar() {
 
-  const { user, setUser, showLogin, setShowLogin, setToken } = useContext(AppContext)
+  const { showLogin, setShowLogin, token, setToken, credits, setCredits, user, setUser } = useContext(AppContext)
   const handleLogout = () => {
     navigate('/')
     setShowLogin(true)
     localStorage.removeItem("token")
     setToken("")
-    setUser(false)
+
   }
 
   const navigate = useNavigate()
@@ -26,15 +26,15 @@ function Navbar() {
         </div>
         <div>
           {
-            user ?
+            token ?
               <div className='flex max-sm:gap-2 gap-8'>
                 <NavLink to='/pricing' className='flex gap-1 items-center bg-blue-100 px-4 rounded-full py-1.5 cursor-pointer hover:scale-105 transition-all duration-700 '>
                   <img width={20} src={assets.credit_star} alt="" />
                   <p className='max-sm:hidden text-gray-600'>Credits left : </p>
-                  <p className='text-gray-600'>4</p>
+                  <p className='text-gray-600'>{credits}</p>
                 </NavLink>
                 <div className='flex gap-2 items-center'>
-                  <p className='max-sm:hidden'>Hi, Richard</p>
+                  <p className='max-sm:hidden'>Hi, {user.name}</p>
                   <div className='relative group '>
                     <img className='cursor-pointer drop-shadow-' width={36} src={assets.profile_icon} alt="" />
                     <div className='absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-12 '>

@@ -6,7 +6,7 @@ import axios from 'axios'
 
 function Login() {
   const [userState, setUserState] = useState('Login')
-  const { showLogin, setShowLogin, user, setUser, backendUrl, token, setToken } = useContext(AppContext)
+  const { showLogin, setShowLogin, backendUrl, token, setToken,loadUserCredits } = useContext(AppContext)
 
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
@@ -20,8 +20,9 @@ function Login() {
         const response = await axios.post(backendUrl + "/api/user/register", { name, email, password })
         if (response.data.success) {
           setToken(response.data.token)
+          localStorage.setItem("token",response.data.token)
           setShowLogin(false)
-          setUser(true)
+          
         }
         else {
           console.log(response.data.message)
@@ -35,8 +36,10 @@ function Login() {
         const response = await axios.post(backendUrl + "/api/user/login", { email, password })
         if (response.data.success) {
           setToken(response.data.token)
+          localStorage.setItem("token",response.data.token)
+          
           setShowLogin(false)
-          setUser(true)
+          
         }
         else {
           console.log(response.data.message)
