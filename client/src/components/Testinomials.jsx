@@ -5,7 +5,7 @@ import { AppContext } from '../context/AppContext'
 import { useNavigate } from 'react-router-dom'
 function Testinomials() {
 
-    const { user,setShowLogin } = useContext(AppContext)
+    const { user, setShowLogin } = useContext(AppContext)
     const navigate = useNavigate()
 
 
@@ -23,7 +23,7 @@ function Testinomials() {
             initial={{ opacity: 0.2, y: 100 }}
             transition={{ duration: 1 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{  }}
+            viewport={{}}
         >
             <div className='text-center pt-16 pb-10'>
                 <h1 className='text-xl text-[#252525] font-medium'>Customer testimonials</h1>
@@ -33,7 +33,7 @@ function Testinomials() {
                 {
                     testimonialsData.map((testinomial, index) => {
                         return (
-                            <div key={index} className='text-center flex flex-col items-center  hover:scale-105 transition-all duration-700 px-5 py-7 border border-gray-200 rounded-xl shadow-lg'>
+                            <div key={index} className='text-center flex flex-col items-center  hover:scale-105 transition-all duration-700 px-5 py-7 border border-gray-200 rounded-xl shadow-lg cursor-pointer'>
                                 <img className='w-8' src={testinomial.image} alt="" />
                                 <p className='text-[#62577B] text-sm pt-2.5'>{testinomial.name}</p>
                                 <p className='text-[#62577B] text-xs pb-3'>{testinomial.role}</p>

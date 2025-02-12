@@ -19,7 +19,7 @@ function Steps() {
                 {
                     stepsData.map((step, index) => {
                         return (
-                            <div key={index} className='flex gap-4 border border-gray-200 rounded-xl box-content items-center px-4 py-6 hover:scale-105 transition-all duration-500 shadow-lg'>
+                            <div key={index} className='cursor-pointer flex gap-4 border border-gray-200 rounded-xl box-content items-center px-4 py-6 hover:scale-105 transition-all duration-500 shadow-lg'>
                                 <img src={step.icon} alt="" />
                                 <div className='flex flex-col gap-1 '>
                                     <p className='text-sm text-gray-900'>{step.title}</p>

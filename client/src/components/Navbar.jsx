@@ -6,7 +6,14 @@ import { AppContext } from '../context/AppContext'
 
 function Navbar() {
 
-  const { user, setUser, showLogin, setShowLogin } = useContext(AppContext)
+  const { user, setUser, showLogin, setShowLogin, setToken } = useContext(AppContext)
+  const handleLogout = () => {
+    navigate('/')
+    setShowLogin(true)
+    localStorage.removeItem("token")
+    setToken("")
+    setUser(false)
+  }
 
   const navigate = useNavigate()
   return (
@@ -32,7 +39,7 @@ function Navbar() {
                     <img className='cursor-pointer drop-shadow-' width={36} src={assets.profile_icon} alt="" />
                     <div className='absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-12 '>
                       <ul>
-                        <li className='cursor-pointer'>Logout</li>
+                        <li onClick={handleLogout} className='cursor-pointer'>Logout</li>
                       </ul>
 
 
@@ -42,8 +49,8 @@ function Navbar() {
               </div>
               :
               <div className='flex max-sm:gap-2 gap-8 items-center '>
-                <p onClick={() => navigate('/pricing')} className='max-sm:hidden text-base'>Pricing</p>
-                <button onClick={() => setShowLogin(true)} className='bg-gray-800 text-white px-8 py-1.5 rounded-full'>Login</button>
+                <p onClick={() => navigate('/pricing')} className='max-sm:hidden text-base cursor-pointer'>Pricing</p>
+                <button onClick={() => setShowLogin(true)} className='bg-gray-800 text-white px-8 py-1.5 rounded-full cursor-pointer'>Login</button>
               </div>
           }
         </div>

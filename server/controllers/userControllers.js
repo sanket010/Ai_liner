@@ -47,8 +47,8 @@ export const login = async (req, res) => {
 
     try {
         const { name, email, password } = req.body;
-        if (!name || !email || !password) {
-            return res.json({ success: false, message: 'Name, email, password must be provided.' });
+        if (!email || !password) {
+            return res.json({ success: false, message: 'Email, password must be provided.' });
         }
 
         // checking existing user
@@ -150,5 +150,19 @@ export const getUserData = async (req, res) => {
         console.log(error);
         res.json({ success: false, message: error.message })
     }
+}
+
+export const userCredits = async () => {
+    const userId = req.body
+    try {
+
+        const user = await userModel.findById(userId)
+        res.json({ success: true, credits: user.creditBalance, user: { name: user.name } })
+
+    } catch (error) {
+        res.json({ success: false, message: error.message })
+        console.log(error);
+    }
+
 }
 
