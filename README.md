@@ -77,13 +77,6 @@ The frontend UI is **fully responsive and animated** for a smooth experience:
 
 📌 **Animations improve user experience** by making transitions feel natural and smooth. The UI is designed to keep users engaged while generating images in real time.  
 
----
-
-## 📸 Screenshots  
-
-| Home Page | Image Generation Page | Payment Page |  
-|-----------|-----------------------|-------------|  
-| ![Home Page](assets/images/homepage-screenshot.png) | ![Generation Page](assets/images/generation-page-screenshot.png) | ![Payment Page](assets/images/payment-page-screenshot.png) |  
 
 ---
 
@@ -96,11 +89,11 @@ git clone https://github.com/shubham79a/Text-to-Image-Generator.git
 cd Text-to-Image-Generator
 
 
-2️⃣ Install Dependencies
+### 2️⃣ Install Dependencies
 npm install
 
 
-3️⃣ Set Up Environment Variables
+### 3️⃣ Set Up Environment Variables
 Create a .env file in the root directory and add:
 
 PORT=5000
@@ -111,7 +104,7 @@ RAZORPAY_SECRET=your_razorpay_secret
 AI_API_KEY=your_ai_api_key
 
 
-4️⃣ Run the Project
+### 4️⃣ Run the Project
 Start the backend:
 npm run server
 
@@ -121,10 +114,10 @@ npm run client
 
 
 
-📝 Contributing
+## 📝 Contributing
 Contributions are welcome! Feel free to fork the repo and submit a pull request.
 
-📜 License
+## 📜 License
 This project is licensed under the MIT License.
 
 
