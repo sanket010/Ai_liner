@@ -88,6 +88,7 @@ The frontend UI is **fully responsive and animated** for a smooth experience:
 git clone https://github.com/shubham79a/Text-to-Image-Generator.git
 cd Text-to-Image-Generator
 
+---
 
 ### 2️⃣ Install Dependencies
 npm install
