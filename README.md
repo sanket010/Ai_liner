@@ -84,18 +84,21 @@ The frontend UI is **fully responsive and animated** for a smooth experience:
 
 ### 1️⃣ Clone the Repository  
 
-```sh
+```bash
 git clone https://github.com/shubham79a/Text-to-Image-Generator.git
 cd Text-to-Image-Generator
-
+```
 ---
 
 ### 2️⃣ Install Dependencies
+```bash
 npm install
+```
 
 
 ### 3️⃣ Set Up Environment Variables
 Create a .env file in the root directory and add:
+```bash
 
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
@@ -103,25 +106,30 @@ JWT_SECRET=your_jwt_secret
 RAZORPAY_KEY_ID=your_razorpay_key
 RAZORPAY_SECRET=your_razorpay_secret
 AI_API_KEY=your_ai_api_key
-
+```
 
 ### 4️⃣ Run the Project
 Start the backend:
+```bash
 npm run server
+```
 
 Start the frontend:
+```bash
 npm run client
+```
 
-
-
+---
 
 ## 📝 Contributing
 Contributions are welcome! Feel free to fork the repo and submit a pull request.
 
+---
+
 ## 📜 License
 This project is licensed under the MIT License.
 
-
+---
 
 ## 📬 Contact  
 
