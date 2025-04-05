@@ -133,5 +133,5 @@ This project is licensed under the MIT License.
 
 ## 📬 Contact  
 
-🔗 **GitHub:** [shubham79a](https://github.com/shubham79a)  
-🔗 **LinkedIn:** [Shubham Kumar](https://www.linkedin.com/in/shubham-kumar-894799290/)  
+- 🔗 **GitHub:** [shubham79a](https://github.com/shubham79a)  
+- 🔗 **LinkedIn:** [Shubham Kumar](https://www.linkedin.com/in/shubham-kumar-894799290/)  
