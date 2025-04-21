@@ -10,7 +10,7 @@ const AppContextProvider = (props) => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL
     const navigate = useNavigate()
     const [token, setToken] = useState('')
-    const [user, setUser] = useState('Shubh')
+    const [user, setUser] = useState('')
 
     const [showLogin, setShowLogin] = useState(false)
     const [credits, setCredits] = useState(false)

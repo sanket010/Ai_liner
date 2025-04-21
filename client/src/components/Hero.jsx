@@ -7,10 +7,12 @@ import { useNavigate } from 'react-router-dom'
 
 function Hero() {
 
-    const { user, showLogin, setShowLogin } = useContext(AppContext)
+    const { user, showLogin, setShowLogin, token } = useContext(AppContext)
     const navigate = useNavigate()
     const onclickHandler = () => {
-        if (user) {
+        if (user && token) {
+            console.log(user);
+
             navigate('/result')
         }
         else {
@@ -22,7 +24,7 @@ function Hero() {
             initial={{ opacity: 0.2, y: 100 }}
             transition={{ duration: 1 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{  }}
+            viewport={{}}
 
         >
             <div className=' text-center flex flex-col justify-center items-center'>

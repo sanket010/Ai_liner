@@ -6,7 +6,7 @@ import axios from 'axios'
 
 function Login() {
   const [userState, setUserState] = useState('Login')
-  const { showLogin, setShowLogin, backendUrl, token, setToken,loadUserCredits } = useContext(AppContext)
+  const { showLogin, setShowLogin, backendUrl, token, setToken, loadUserCredits } = useContext(AppContext)
 
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
@@ -20,9 +20,9 @@ function Login() {
         const response = await axios.post(backendUrl + "/api/user/register", { name, email, password })
         if (response.data.success) {
           setToken(response.data.token)
-          localStorage.setItem("token",response.data.token)
+          localStorage.setItem("token", response.data.token)
           setShowLogin(false)
-          
+
         }
         else {
           console.log(response.data.message)
@@ -36,10 +36,10 @@ function Login() {
         const response = await axios.post(backendUrl + "/api/user/login", { email, password })
         if (response.data.success) {
           setToken(response.data.token)
-          localStorage.setItem("token",response.data.token)
-          
+          localStorage.setItem("token", response.data.token)
+
           setShowLogin(false)
-          
+
         }
         else {
           console.log(response.data.message)
@@ -99,9 +99,9 @@ function Login() {
           {
             userState === 'Sign Up'
               ?
-              <p className='text-[#7A7A7A] text-base pt-5'>Don’t have an account? <span onClick={() => setUserState('Login')} className='text-[#007AFF] cursor-pointer'>Login</span></p>
+              <p className='text-[#7A7A7A] text-base pt-5'>Already have a Account? <span onClick={() => setUserState('Login')} className='text-[#007AFF] cursor-pointer'>Login</span></p>
               :
-              <p className='text-[#7A7A7A] text-base pt-5'>Already have a Account? <span onClick={() => setUserState('Sign Up')} className='text-[#007AFF] cursor-pointer'>Sign Up</span></p>
+              <p className='text-[#7A7A7A] text-base pt-5'>Don’t have an account? <span onClick={() => setUserState('Sign Up')} className='text-[#007AFF] cursor-pointer'>Sign Up</span></p>
           }
 
         </div>

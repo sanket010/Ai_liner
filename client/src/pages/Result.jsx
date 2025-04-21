@@ -1,7 +1,8 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { assets } from '../assets/assets'
 import { motion } from 'framer-motion'
 import { AppContext } from '../context/AppContext'
+import { useNavigate } from 'react-router-dom'
 
 function Result() {
     const { generateImage } = useContext(AppContext)
@@ -9,6 +10,9 @@ function Result() {
     const [isImageLoaded, setIsImageLoaded] = useState(false)
     const [loading, setLoading] = useState(false)
     const [input, setInput] = useState('')
+
+    const { user, token } = useContext(AppContext);
+    const navigate = useNavigate();
 
     const onSubmitHandler = async (e) => {
         e.preventDefault();
