@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { assets } from '../assets/assets'
 
+
 import { NavLink, useNavigate } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
 
@@ -21,7 +22,7 @@ function Navbar() {
       <div className='flex justify-between py-6  items-center'>
         <div>
           <NavLink to='/'>
-            <img className='cursor-pointer h-9' src={assets.logo} alt="" />
+            <img className='cursor-pointer h-28' src={assets.logo} alt="" />
           </NavLink>
         </div>
         <div>

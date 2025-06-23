@@ -1,5 +1,5 @@
-import logo from './logo.svg'
-import logo_icon from './logo_icon.svg'
+import logo from './logo.png'
+import logo_icon from './logo_icon.png'
 import facebook_icon from './facebook_icon.svg'
 import instagram_icon from './instagram_icon.svg'
 import twitter_icon from './twitter_icon.svg'
