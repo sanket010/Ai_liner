@@ -3,33 +3,53 @@ services:
     name: ai-liner
     env: node
     buildCommand: |
-      # Print current directory and contents
+      # Print environment info
+      echo "=== Build Environment ==="
+      echo "Node version: $(node -v)"
+      echo "NPM version: $(npm -v)"
       echo "Current directory: $(pwd)"
       ls -la
       
       # Install and build client
-      echo "=== Building client ==="
+      echo "\n=== Building Client ==="
       cd client
       echo "Client directory: $(pwd)"
+      ls -la
+      
+      echo "\nInstalling client dependencies..."
       npm install
+      
+      echo "\nBuilding client..."
       npm run build
       
       # Verify build output
-      echo "=== Verifying build output ==="
-      echo "Client build output:"
-      ls -la ../server/dist || echo "No dist directory found"
+      echo "\n=== Verifying Build Output ==="
+      echo "Build output directory: $(pwd)/dist"
+      ls -la dist/ || echo "No dist directory found"
+      
+      # Create server/public directory if it doesn't exist
+      echo "\n=== Setting Up Server Directory ==="
+      mkdir -p ../server/public
+      
+      # Copy build output to server/public
+      echo "\nCopying build files to server/public..."
+      cp -r dist/* ../server/public/
+      
+      # Verify files were copied
+      echo "\n=== Verifying Server Public Directory ==="
+      ls -la ../server/public/
       
       # Install server dependencies
-      echo "=== Setting up server ==="
+      echo "\n=== Installing Server Dependencies ==="
       cd ../server
-      echo "Server directory: $(pwd)"
       npm install
       
       # Final directory structure
-      echo "=== Final directory structure ==="
+      echo "\n=== Final Directory Structure ==="
       cd ..
       find . -type d -not -path "*/node_modules/*" -not -path "*/.git/*" | sort
-    startCommand: node server.js
+      
+    startCommand: node server/server.js
     envVars:
       - key: NODE_ENV
         value: production

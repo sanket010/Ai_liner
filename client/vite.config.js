@@ -8,10 +8,14 @@ import fs from 'fs'
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const outDir = path.resolve(__dirname, '../server/public')
 
+// Log build information
+console.log('\n=== Vite Build Configuration ===')
+console.log('Build output directory:', outDir)
+
 // Ensure the output directory exists
 if (!fs.existsSync(outDir)) {
+  console.log('Creating output directory:', outDir)
   fs.mkdirSync(outDir, { recursive: true })
-  console.log(`Created output directory: ${outDir}`)
 }
 
 // https://vitejs.dev/config/
@@ -20,11 +24,12 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  base: '/',  
+  base: '/',
   build: {
     outDir,
     emptyOutDir: true,
     sourcemap: true,
+    minify: 'terser',
     rollupOptions: {
       output: {
         manualChunks: {
@@ -32,16 +37,18 @@ export default defineConfig({
         },
         entryFileNames: 'assets/[name].[hash].js',
         chunkFileNames: 'assets/[name].[hash].js',
-        assetFileNames: 'assets/[name].[hash][extname]'
+        assetFileNames: 'assets/[name].[hash][extname]',
       },
     },
-    minify: 'terser',
     terserOptions: {
       compress: {
         drop_console: true,
         drop_debugger: true,
       },
     },
+    // Add build progress and output
+    reportCompressedSize: true,
+    chunkSizeWarningLimit: 1000,
   },
   server: {
     proxy: {
@@ -50,6 +57,14 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       }
-    }
-  }
+    },
+    host: true,
+    port: 3000,
+  },
+  preview: {
+    port: 4000,
+  },
+  // Add custom logging
+  logLevel: 'info',
+  clearScreen: false,
 })
