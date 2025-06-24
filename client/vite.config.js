@@ -3,8 +3,16 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { fileURLToPath } from 'url'
 import path from 'path'
+import fs from 'fs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const outDir = path.resolve(__dirname, '../server/public')
+
+// Ensure the output directory exists
+if (!fs.existsSync(outDir)) {
+  fs.mkdirSync(outDir, { recursive: true })
+  console.log(`Created output directory: ${outDir}`)
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -12,9 +20,9 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  base: './',  
+  base: '/',  
   build: {
-    outDir: path.join(__dirname, '../server/dist'),  
+    outDir,
     emptyOutDir: true,
     sourcemap: true,
     rollupOptions: {

@@ -3,14 +3,32 @@ services:
     name: ai-liner
     env: node
     buildCommand: |
-      # Install client dependencies and build
+      # Print current directory and contents
+      echo "Current directory: $(pwd)"
+      ls -la
+      
+      # Install and build client
+      echo "=== Building client ==="
       cd client
+      echo "Client directory: $(pwd)"
       npm install
       npm run build
-      # The build output is now in ../server/dist
+      
+      # Verify build output
+      echo "=== Verifying build output ==="
+      echo "Client build output:"
+      ls -la ../server/dist || echo "No dist directory found"
+      
       # Install server dependencies
+      echo "=== Setting up server ==="
       cd ../server
+      echo "Server directory: $(pwd)"
       npm install
+      
+      # Final directory structure
+      echo "=== Final directory structure ==="
+      cd ..
+      find . -type d -not -path "*/node_modules/*" -not -path "*/.git/*" | sort
     startCommand: node server.js
     envVars:
       - key: NODE_ENV
