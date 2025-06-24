@@ -1,26 +1,51 @@
-import express from 'express'
-import cors from 'cors'
-import 'dotenv/config'
+import express from 'express';
+import cors from 'cors';
+import 'dotenv/config';
+import { fileURLToPath } from 'url';
+import path from 'path';
+import connectDB from './config/mongodb.js';
+import userRouter from './routes/userRoutes.js';
+import imageRouter from './routes/imageRoutes.js';
+import authRouter from './routes/authRoutes.js';
 
-import connectDB from './config/mongodb.js'
-import userRouter from './routes/userRoutes.js'
-import imageRouter from './routes/imageRoutes.js'
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 4001;
 
-const app = express()
+const app = express();
 
-app.use(express.json())
-app.use(cors())
-await connectDB()
+// Middleware
+app.use(express.json());
+app.use(cors());
 
+// Connect to MongoDB
+await connectDB();
+
+// Routes
+app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
+app.use('/api/image', imageRouter);
+
+// Test route
 app.get('/', (req, res) => {
-    res.json('API Working')
-})
+  res.json({ message: 'API Working' });
+});
 
-app.use('/api/user',userRouter)
-app.use('/api/image',imageRouter)
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ success: false, message: 'Something went wrong!' });
+});
 
-app.listen(PORT, () => { 
-    console.log('Server is running at port', PORT)
-})
+// Start server
+const server = app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err) => {
+  console.error(`Error: ${err.message}`);
+  // Close server & exit process
+  server.close(() => process.exit(1));
+});
