@@ -23,16 +23,21 @@ app.use(cors());
 if (process.env.NODE_ENV === 'production') {
   // Try multiple possible paths for the static files
   const staticPaths = [
-    path.join(__dirname, '../client/dist'),
-    path.join(__dirname, '../../client/dist'),
-    path.join(process.cwd(), 'client/dist')
+    path.join(__dirname, 'dist'),           // New build location
+    path.join(__dirname, '../dist'),        // Fallback location
+    path.join(__dirname, '../client/dist'), // Old location
+    path.join(process.cwd(), 'dist')        // Absolute path fallback
   ];
   
   const staticPath = staticPaths.find(p => {
     try {
-      fs.accessSync(path.join(p, 'index.html'), fs.constants.F_OK);
+      const indexPath = path.join(p, 'index.html');
+      console.log(`Checking for index.html at: ${indexPath}`);
+      fs.accessSync(indexPath, fs.constants.F_OK);
+      console.log(`Found static files at: ${p}`);
       return true;
     } catch (e) {
+      console.log(`Not found at: ${p}`);
       return false;
     }
   });
@@ -58,7 +63,8 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'ok',
     timestamp: new Date().toISOString(),
-    nodeVersion: process.version
+    nodeVersion: process.version,
+    buildPath: process.env.NODE_ENV === 'production' ? staticPath : 'development'
   });
 });
 
@@ -66,23 +72,33 @@ app.get('/api/health', (req, res) => {
 if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
     const indexPath = [
+      path.join(__dirname, 'dist/index.html'),
+      path.join(__dirname, '../dist/index.html'),
       path.join(__dirname, '../client/dist/index.html'),
-      path.join(__dirname, '../../client/dist/index.html'),
-      path.join(process.cwd(), 'client/dist/index.html')
+      path.join(process.cwd(), 'dist/index.html')
     ].find(p => {
       try {
         fs.accessSync(p, fs.constants.F_OK);
+        console.log(`Serving index.html from: ${p}`);
         return true;
       } catch (e) {
+        console.log(`Could not find index.html at: ${p}`);
         return false;
       }
     });
     
     if (indexPath) {
-      console.log(`Serving index.html from: ${indexPath}`);
       res.sendFile(indexPath);
     } else {
-      res.status(404).json({ error: 'Frontend build not found' });
+      res.status(404).json({ 
+        error: 'Frontend build not found',
+        checkedPaths: [
+          path.join(__dirname, 'dist/index.html'),
+          path.join(__dirname, '../dist/index.html'),
+          path.join(__dirname, '../client/dist/index.html'),
+          path.join(process.cwd(), 'dist/index.html')
+        ]
+      });
     }
   });
 } else {
