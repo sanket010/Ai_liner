@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: ai-liner
+    env: node
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        description: MongoDB connection string
+      - key: JWT_SECRET
+        generateValue: true
+        description: Secret key for JWT token generation
+    healthCheckPath: /api/health
+    autoDeploy: true
+    plan: free

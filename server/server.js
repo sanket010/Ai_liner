@@ -11,7 +11,7 @@ import authRouter from './routes/authRoutes.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PORT = process.env.PORT || 4001;
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 
@@ -26,6 +26,15 @@ await connectDB();
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/image', imageRouter);
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    nodeVersion: process.version
+  });
+});
 
 // Test route
 app.get('/', (req, res) => {
