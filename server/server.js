@@ -19,49 +19,59 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// Store the static path for health check
+let staticPath = null;
+
 // Serve static files from the React frontend in production
 if (process.env.NODE_ENV === 'production') {
-  // Try multiple possible paths for the static files
-  const staticPaths = [
-    path.join(__dirname, 'public'),          // New build location
-    path.join(__dirname, 'dist'),            // Old location
-    path.join(__dirname, '../dist'),         // Fallback location
-    path.join(__dirname, '../client/dist'),  // Client build location
-    path.join(process.cwd(), 'public'),      // Absolute path fallback
-    path.join(process.cwd(), 'dist')         // Absolute path fallback 2
+  // Define all possible static file locations
+  const possiblePaths = [
+    path.join(__dirname, 'public'),           // Primary location (server/public)
+    path.join(process.cwd(), 'public'),      // Root public directory
+    path.join(__dirname, 'dist'),             // Fallback dist location
+    path.join(process.cwd(), 'dist'),         // Root dist directory
+    path.join(__dirname, '../client/dist')    // Client build directory
   ];
-  
-  const staticPath = staticPaths.find(p => {
+
+  // Log all possible paths for debugging
+  console.log('\n=== Checking for static files in the following locations ===');
+  possiblePaths.forEach((p, i) => console.log(`${i + 1}. ${p}`));
+  console.log('==========================================================\n');
+
+  // Find the first valid path that contains index.html
+  staticPath = possiblePaths.find(p => {
     try {
       const indexPath = path.join(p, 'index.html');
-      console.log(`Checking for index.html at: ${indexPath}`);
       fs.accessSync(indexPath, fs.constants.F_OK);
       console.log(`✓ Found static files at: ${p}`);
+      
+      // Log directory contents for verification
+      try {
+        const files = fs.readdirSync(p);
+        console.log(`Directory contents (${p}):`, files);
+        if (files.includes('assets')) {
+          const assets = fs.readdirSync(path.join(p, 'assets'));
+          console.log('Assets found:', assets);
+        }
+      } catch (e) {
+        console.error(`Error reading directory ${p}:`, e.message);
+      }
+      
       return true;
     } catch (e) {
       console.log(`✗ Not found at: ${p}`);
       return false;
     }
   });
-  
+
   if (staticPath) {
     console.log(`\n=== Serving static files from: ${staticPath} ===\n`);
     app.use(express.static(staticPath));
-    
-    // Log directory contents for debugging
-    try {
-      const files = fs.readdirSync(staticPath);
-      console.log('Static files found:', files);
-      if (files.includes('assets')) {
-        const assets = fs.readdirSync(path.join(staticPath, 'assets'));
-        console.log('Assets found:', assets);
-      }
-    } catch (e) {
-      console.error('Error reading static files directory:', e);
-    }
+    // Store the static path in the app for health check
+    app.set('staticPath', staticPath);
   } else {
     console.error('\n=== ERROR: Could not find client build directory ===');
-    console.error('Searched in:', staticPaths);
+    console.error('Searched in:', possiblePaths);
     console.error('Current working directory:', process.cwd());
     console.error('__dirname:', __dirname);
     console.error('================================================\n');
@@ -78,49 +88,35 @@ app.use('/api/image', imageRouter);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  const staticPath = process.env.NODE_ENV === 'production' ? 
-    (app.get('staticPath') || 'development') : 'development';
-    
+  const currentStaticPath = app.get('staticPath') || 'Not found';
+  
   res.status(200).json({
     status: 'ok',
     timestamp: new Date().toISOString(),
     nodeVersion: process.version,
-    buildPath: staticPath,
-    env: process.env.NODE_ENV || 'development'
+    buildPath: currentStaticPath,
+    env: process.env.NODE_ENV || 'development',
+    cwd: process.cwd(),
+    __dirname: __dirname
   });
 });
 
 // Handle SPA fallback - return the main index.html file for any unknown routes
 if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
-    const indexPath = [
-      path.join(__dirname, 'public/index.html'),
-      path.join(__dirname, 'dist/index.html'),
-      path.join(__dirname, '../dist/index.html'),
-      path.join(process.cwd(), 'public/index.html'),
-      path.join(process.cwd(), 'dist/index.html')
-    ].find(p => {
-      try {
-        fs.accessSync(p, fs.constants.F_OK);
-        console.log(`Serving index.html from: ${p}`);
-        return true;
-      } catch (e) {
-        console.log(`Could not find index.html at: ${p}`);
-        return false;
-      }
-    });
-    
-    if (indexPath) {
+    if (staticPath) {
+      const indexPath = path.join(staticPath, 'index.html');
+      console.log(`Serving index.html from: ${indexPath}`);
       res.sendFile(indexPath);
     } else {
       res.status(404).json({ 
         error: 'Frontend build not found',
-        checkedPaths: [
-          path.join(__dirname, 'public/index.html'),
-          path.join(__dirname, 'dist/index.html'),
-          path.join(__dirname, '../dist/index.html'),
-          path.join(process.cwd(), 'public/index.html'),
-          path.join(process.cwd(), 'dist/index.html')
+        possiblePaths: [
+          path.join(__dirname, 'public'),
+          path.join(process.cwd(), 'public'),
+          path.join(__dirname, 'dist'),
+          path.join(process.cwd(), 'dist'),
+          path.join(__dirname, '../client/dist')
         ],
         currentDir: process.cwd(),
         __dirname: __dirname
@@ -130,7 +126,12 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   // Only in development
   app.get('/', (req, res) => {
-    res.json({ message: 'API Working' });
+    res.json({ 
+      message: 'API Working',
+      env: process.env.NODE_ENV || 'development',
+      cwd: process.cwd(),
+      __dirname: __dirname
+    });
   });
 }
 

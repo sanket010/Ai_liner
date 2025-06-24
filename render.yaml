@@ -8,16 +8,18 @@ services:
       echo "Node version: $(node -v)"
       echo "NPM version: $(npm -v)"
       echo "Current directory: $(pwd)"
+      echo "Directory contents:"
       ls -la
       
       # Install and build client
       echo "\n=== Building Client ==="
       cd client
       echo "Client directory: $(pwd)"
+      echo "Client directory contents:"
       ls -la
       
       echo "\nInstalling client dependencies..."
-      npm install
+      npm install --legacy-peer-deps
       
       echo "\nBuilding client..."
       npm run build
@@ -27,7 +29,7 @@ services:
       echo "Build output directory: $(pwd)/dist"
       ls -la dist/ || echo "No dist directory found"
       
-      # Create server/public directory if it doesn't exist
+      # Create server/public directory
       echo "\n=== Setting Up Server Directory ==="
       mkdir -p ../server/public
       
