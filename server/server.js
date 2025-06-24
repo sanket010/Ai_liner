@@ -12,17 +12,22 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT || 3000;
-
 const app = express();
 
 // Middleware
 app.use(express.json());
 app.use(cors());
 
+// Serve static files from the React frontend in production
+if (process.env.NODE_ENV === 'production') {
+  // Set static folder
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+}
+
 // Connect to MongoDB
 await connectDB();
 
-// Routes
+// API Routes
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/image', imageRouter);
@@ -36,10 +41,17 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Test route
-app.get('/', (req, res) => {
-  res.json({ message: 'API Working' });
-});
+// Handle SPA fallback - return the main index.html file for any unknown routes
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+  });
+} else {
+  // Only in development
+  app.get('/', (req, res) => {
+    res.json({ message: 'API Working' });
+  });
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -48,26 +60,15 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-// Serve static files from the React frontend in production
-if (process.env.NODE_ENV === 'production') {
-  // Set static folder
-  app.use(express.static(path.join(__dirname, '../client/dist')));
-
-  // Handle SPA fallback - return the main index.html file for any unknown routes
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
-  });
-}
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
   console.error(`Error: ${err.message}`);
   // Close server & exit process
-  app.close(() => process.exit(1));
+  server.close(() => process.exit(1));
 });
 
 export default app;
