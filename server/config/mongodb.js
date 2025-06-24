@@ -8,6 +8,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error('❌ MONGODB_URI is not defined in environment variables');
+  process.exit(1);
+}
+
 // Connection events
 mongoose.connection.on('connected', () => {
   console.log('✅ MongoDB connected successfully');
@@ -34,31 +41,29 @@ const connectDB = async () => {
     return;
   }
 
-  try {
-    // Get the base URI from environment variables
-    let mongoUri = process.env.MONGODB_URI;
-    
-    if (!mongoUri) {
-      throw new Error('MONGODB_URI is not defined in environment variables');
-    }
-    
-    // Trim and ensure proper formatting
-    mongoUri = mongoUri.trim();
-    
-    // If the URI already contains a database name, use it as-is
-    if (mongoUri.includes('mongodb://') || mongoUri.includes('mongodb+srv://')) {
-      console.log('Connecting to MongoDB with URI:', mongoUri.replace(/:([^:]*?)@/, ':***@'));
-      await mongoose.connect(mongoUri, {
+  let retries = 0;
+  const maxRetries = 5;
+  const retryDelay = 5000; // 5 seconds
+
+  while (retries < maxRetries) {
+    try {
+      await mongoose.connect(MONGODB_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
         serverSelectionTimeoutMS: 5000,
         socketTimeoutMS: 45000,
       });
-    } else {
-      throw new Error('Invalid MongoDB connection string format');
+      console.log(`🌱 Connected to MongoDB at ${mongoose.connection.host}`);
+      return;
+    } catch (error) {
+      retries++;
+      console.error(`❌ Failed to connect to MongoDB (retry ${retries}/${maxRetries}):`, error.message);
+      await new Promise(resolve => setTimeout(resolve, retryDelay));
     }
-  } catch (error) {
-    console.error('❌ Failed to connect to MongoDB:', error.message);
-    process.exit(1);
   }
+
+  console.error('❌ Failed to connect to MongoDB after retries');
+  process.exit(1);
 };
 
 export default connectDB;
