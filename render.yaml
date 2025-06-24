@@ -7,14 +7,11 @@ services:
       cd client
       npm install
       npm run build
+      # The build output is now in ../server/dist
       # Install server dependencies
       cd ../server
       npm install
-      # Create necessary directories
-      mkdir -p dist
-      # Move client build to the correct location
-      mv ../dist/* dist/
-    startCommand: cd server && npm start
+    startCommand: node server.js
     envVars:
       - key: NODE_ENV
         value: production

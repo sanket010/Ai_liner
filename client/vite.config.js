@@ -12,9 +12,9 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  base: '/',
+  base: './',  
   build: {
-    outDir: path.join(__dirname, '../dist'),
+    outDir: path.join(__dirname, '../server/dist'),  
     emptyOutDir: true,
     sourcemap: true,
     rollupOptions: {
@@ -22,6 +22,16 @@ export default defineConfig({
         manualChunks: {
           vendor: ['react', 'react-dom', 'react-router-dom'],
         },
+        entryFileNames: 'assets/[name].[hash].js',
+        chunkFileNames: 'assets/[name].[hash].js',
+        assetFileNames: 'assets/[name].[hash][extname]'
+      },
+    },
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
       },
     },
   },
