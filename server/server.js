@@ -3,6 +3,7 @@ import cors from 'cors';
 import 'dotenv/config';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import fs from 'fs';
 import connectDB from './config/mongodb.js';
 import userRouter from './routes/userRoutes.js';
 import imageRouter from './routes/imageRoutes.js';
@@ -20,8 +21,28 @@ app.use(cors());
 
 // Serve static files from the React frontend in production
 if (process.env.NODE_ENV === 'production') {
-  // Set static folder
-  app.use(express.static(path.join(__dirname, '../client/dist')));
+  // Try multiple possible paths for the static files
+  const staticPaths = [
+    path.join(__dirname, '../client/dist'),
+    path.join(__dirname, '../../client/dist'),
+    path.join(process.cwd(), 'client/dist')
+  ];
+  
+  const staticPath = staticPaths.find(p => {
+    try {
+      fs.accessSync(path.join(p, 'index.html'), fs.constants.F_OK);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  });
+  
+  if (staticPath) {
+    console.log(`Serving static files from: ${staticPath}`);
+    app.use(express.static(staticPath));
+  } else {
+    console.error('Could not find client build directory. Check your build process.');
+  }
 }
 
 // Connect to MongoDB
@@ -44,7 +65,25 @@ app.get('/api/health', (req, res) => {
 // Handle SPA fallback - return the main index.html file for any unknown routes
 if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+    const indexPath = [
+      path.join(__dirname, '../client/dist/index.html'),
+      path.join(__dirname, '../../client/dist/index.html'),
+      path.join(process.cwd(), 'client/dist/index.html')
+    ].find(p => {
+      try {
+        fs.accessSync(p, fs.constants.F_OK);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    });
+    
+    if (indexPath) {
+      console.log(`Serving index.html from: ${indexPath}`);
+      res.sendFile(indexPath);
+    } else {
+      res.status(404).json({ error: 'Frontend build not found' });
+    }
   });
 } else {
   // Only in development
